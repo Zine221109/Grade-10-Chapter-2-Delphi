@@ -1,0 +1,2008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grade 10 IT – Chapter 2: Introduction to Delphi</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Sora:wght@300;400;600;700;800&display=swap');
+
+  :root {
+    --bg: #0f0f1a;
+    --surface: #16162a;
+    --card: #1e1e38;
+    --border: #2e2e55;
+    --accent1: #7c6af7;
+    --accent2: #3ecfcf;
+    --accent3: #f7a23e;
+    --accent4: #f75e7c;
+    --green: #43e97b;
+    --text: #e8e8f5;
+    --muted: #8888aa;
+    --code-bg: #111124;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, #0f0f2e 0%, #1a0f3e 40%, #0e2040 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 60px 40px 50px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(124,106,247,.25), transparent);
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(124,106,247,.2);
+    border: 1px solid rgba(124,106,247,.5);
+    color: var(--accent1);
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: 6px 18px;
+    border-radius: 100px;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3.6rem);
+    font-weight: 800;
+    line-height: 1.1;
+    position: relative;
+  }
+  .hero h1 span { color: var(--accent2); }
+  .hero p {
+    margin-top: 18px;
+    color: var(--muted);
+    font-size: 1.05rem;
+    max-width: 600px;
+    margin-inline: auto;
+    position: relative;
+  }
+  .caps-chips {
+    display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+    margin-top: 30px; position: relative;
+  }
+  .chip {
+    background: rgba(62,207,207,.12);
+    border: 1px solid rgba(62,207,207,.3);
+    color: var(--accent2);
+    font-size: .72rem; font-weight: 600; letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: 5px 14px; border-radius: 100px;
+  }
+
+  /* ── NAV TABS ── */
+  .tab-nav {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    padding: 24px 40px 0;
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 50;
+    background: var(--bg);
+  }
+  .tab-btn {
+    font-family: 'Sora', sans-serif;
+    font-size: .8rem; font-weight: 600;
+    padding: 10px 18px; border-radius: 8px 8px 0 0;
+    border: 1px solid transparent; border-bottom: none;
+    cursor: pointer; transition: all .2s;
+    background: transparent; color: var(--muted);
+  }
+  .tab-btn:hover { color: var(--text); background: var(--card); }
+  .tab-btn.active {
+    background: var(--card);
+    border-color: var(--border);
+    color: var(--accent1);
+    position: relative;
+  }
+  .tab-btn.active::after {
+    content: ''; position: absolute;
+    bottom: -1px; left: 0; right: 0; height: 2px;
+    background: var(--accent1);
+  }
+
+  /* ── SECTIONS ── */
+  .section { display: none; padding: 40px; max-width: 1100px; margin: 0 auto; }
+  .section.active { display: block; }
+
+  /* ── SECTION HEADER ── */
+  .sec-header {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 36px;
+  }
+  .sec-icon {
+    width: 52px; height: 52px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem; flex-shrink: 0;
+  }
+  .sec-header h2 { font-size: 1.7rem; font-weight: 700; }
+  .sec-header p { color: var(--muted); font-size: .9rem; margin-top: 4px; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 24px;
+  }
+  .card h3 {
+    font-size: 1.05rem; font-weight: 700;
+    color: var(--accent2);
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card p { line-height: 1.75; color: var(--text); font-size: .93rem; }
+
+  /* ── CODE BLOCK ── */
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 16px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .85rem;
+    line-height: 1.8;
+    overflow-x: auto;
+    position: relative;
+  }
+  .code-block .comment { color: #5c6db8; }
+  .code-block .keyword { color: var(--accent1); font-weight: 700; }
+  .code-block .string { color: var(--green); }
+  .code-block .func { color: var(--accent3); }
+  .code-block .number { color: var(--accent4); }
+  .code-block .type { color: var(--accent2); }
+  .code-block .label {
+    position: absolute; top: 10px; right: 14px;
+    font-size: .65rem; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--muted);
+  }
+
+  /* ── TABLE ── */
+  table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+  th {
+    background: rgba(124,106,247,.15);
+    color: var(--accent1); font-weight: 700;
+    padding: 12px 16px; text-align: left;
+    border-bottom: 2px solid var(--accent1);
+  }
+  td { padding: 11px 16px; border-bottom: 1px solid var(--border); }
+  tr:hover td { background: rgba(255,255,255,.03); }
+  .badge {
+    display: inline-block;
+    font-size: .7rem; font-weight: 700;
+    padding: 3px 10px; border-radius: 100px;
+  }
+  .badge-green { background: rgba(67,233,123,.15); color: var(--green); }
+  .badge-orange { background: rgba(247,162,62,.15); color: var(--accent3); }
+  .badge-purple { background: rgba(124,106,247,.15); color: var(--accent1); }
+  .badge-red { background: rgba(247,94,124,.15); color: var(--accent4); }
+
+  /* ── GRID LAYOUTS ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media(max-width:768px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+
+  /* ── CALLOUT ── */
+  .callout {
+    display: flex; gap: 14px; align-items: flex-start;
+    padding: 18px 20px; border-radius: 12px; margin: 16px 0;
+  }
+  .callout-info { background: rgba(62,207,207,.08); border-left: 3px solid var(--accent2); }
+  .callout-warn { background: rgba(247,162,62,.08); border-left: 3px solid var(--accent3); }
+  .callout-tip { background: rgba(67,233,123,.08); border-left: 3px solid var(--green); }
+  .callout-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 2px; }
+  .callout-body p { font-size: .9rem; line-height: 1.7; }
+  .callout-body strong { display: block; margin-bottom: 4px; font-size: .85rem; }
+
+  /* ── IDE DIAGRAM ── */
+  .ide-diagram {
+    background: #0a0a1a;
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .78rem;
+  }
+  .ide-titlebar {
+    background: #1c1c30;
+    padding: 8px 16px;
+    display: flex; align-items: center; gap: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .ide-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .ide-title { flex: 1; text-align: center; color: var(--muted); font-size: .7rem; }
+  .ide-body { display: grid; grid-template-columns: 180px 1fr 200px; min-height: 260px; }
+  .ide-panel {
+    border-right: 1px solid var(--border);
+    padding: 10px;
+  }
+  .ide-panel:last-child { border-right: none; }
+  .ide-panel-title { color: var(--accent1); font-size: .65rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 8px; }
+  .ide-tree-item { color: var(--muted); padding: 3px 0; font-size: .7rem; }
+  .ide-tree-item.active { color: var(--accent2); }
+  .ide-form {
+    background: #c0c0c0;
+    margin: 10px;
+    border-radius: 4px;
+    border: 2px solid #888;
+    padding: 8px;
+    font-family: 'Sora', sans-serif;
+    font-size: .7rem;
+    color: #000;
+    min-height: 140px;
+    position: relative;
+  }
+  .ide-form-title { background: #000080; color: white; padding: 2px 6px; margin: -8px -8px 8px; font-size: .68rem; }
+  .sim-label { display: block; margin: 6px 0 2px; font-size: .65rem; color: #000; }
+  .sim-edit { background: #fff; border: 1px solid #888; padding: 3px 6px; display: block; width: 120px; font-size: .65rem; }
+  .sim-btn { background: #d4d0c8; border: 2px outset #fff; padding: 3px 12px; font-size: .68rem; cursor: pointer; margin-top: 8px; }
+  .ide-obj-item { font-size: .65rem; color: var(--muted); padding: 3px 0; }
+  .ide-obj-item.selected { color: var(--accent3); }
+
+  /* ── QUIZ ── */
+  .quiz-q {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .quiz-q p { font-weight: 600; margin-bottom: 16px; line-height: 1.6; }
+  .quiz-options { display: flex; flex-direction: column; gap: 10px; }
+  .quiz-opt {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer; transition: all .2s;
+    font-size: .9rem;
+    background: var(--surface);
+  }
+  .quiz-opt:hover { border-color: var(--accent1); background: rgba(124,106,247,.08); }
+  .quiz-opt.correct { border-color: var(--green); background: rgba(67,233,123,.12); color: var(--green); }
+  .quiz-opt.wrong { border-color: var(--accent4); background: rgba(247,94,124,.12); color: var(--accent4); }
+  .quiz-opt.disabled { pointer-events: none; }
+  .quiz-letter {
+    width: 28px; height: 28px; border-radius: 8px;
+    background: var(--border); display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: .8rem; flex-shrink: 0;
+  }
+  .quiz-feedback {
+    margin-top: 12px; padding: 12px 16px; border-radius: 10px;
+    font-size: .88rem; display: none;
+  }
+  .quiz-score-bar {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 20px 24px;
+    display: flex; align-items: center; gap: 20px;
+    margin-bottom: 24px;
+  }
+  .score-num { font-size: 2.5rem; font-weight: 800; color: var(--accent1); }
+  .score-label { color: var(--muted); font-size: .85rem; }
+
+  /* ── DRAG & DROP MATCHING ── */
+  .match-container { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .match-col h4 { font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+  .match-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    font-size: .88rem;
+    cursor: grab;
+    transition: all .15s;
+    user-select: none;
+  }
+  .match-item:active { cursor: grabbing; opacity: .7; }
+  .match-item.dragging { opacity: .5; }
+  .match-item.matched { border-color: var(--green); background: rgba(67,233,123,.1); color: var(--green); cursor: default; }
+  .match-drop {
+    background: rgba(255,255,255,.03);
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    min-height: 44px;
+    font-size: .88rem;
+    transition: border-color .15s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .match-drop.over { border-color: var(--accent1); background: rgba(124,106,247,.08); }
+  .match-drop .drop-label { color: var(--muted); font-size: .8rem; }
+
+  /* ── FLOW DIAGRAM ── */
+  .flow { display: flex; flex-direction: column; align-items: center; gap: 0; }
+  .flow-node {
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-size: .85rem; font-weight: 600;
+    text-align: center; min-width: 200px;
+  }
+  .flow-oval { border-radius: 50px; }
+  .flow-diamond {
+    transform: rotate(45deg);
+    width: 110px; height: 110px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .flow-diamond-text { transform: rotate(-45deg); font-size: .75rem; text-align: center; }
+  .flow-arrow {
+    width: 2px; height: 24px;
+    background: var(--muted);
+    position: relative;
+  }
+  .flow-arrow::after {
+    content: '▼';
+    position: absolute;
+    bottom: -14px; left: -7px;
+    color: var(--muted); font-size: .8rem;
+  }
+  .flow-row { display: flex; align-items: center; gap: 12px; }
+  .flow-h-arrow { width: 40px; height: 2px; background: var(--muted); position: relative; }
+
+  /* ── STEP LIST ── */
+  .steps { counter-reset: steps; }
+  .step {
+    display: flex; gap: 18px; align-items: flex-start;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .step:last-child { border-bottom: none; }
+  .step-num {
+    width: 38px; height: 38px; border-radius: 10px;
+    background: rgba(124,106,247,.2);
+    border: 1px solid rgba(124,106,247,.4);
+    color: var(--accent1); font-weight: 800; font-size: .9rem;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .step-content h4 { font-size: .95rem; font-weight: 700; margin-bottom: 6px; }
+  .step-content p { font-size: .88rem; color: var(--muted); line-height: 1.7; }
+
+  /* ── INTERACTIVE DELPHI SIM ── */
+  #delphi-sim {
+    background: #0a0a1a;
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .sim-bar {
+    background: #1c1c30; padding: 10px 20px;
+    display: flex; align-items: center; gap: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sim-bar span { font-size: .75rem; color: var(--muted); }
+  .sim-bar .sim-title { flex: 1; text-align: center; font-weight: 600; font-size: .8rem; color: var(--accent2); }
+  .sim-area { display: grid; grid-template-columns: 1fr 280px; min-height: 340px; }
+  .sim-form-area {
+    padding: 20px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .sim-form-label { font-size: .8rem; color: var(--muted); }
+  .sim-field {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .88rem;
+    width: 100%;
+  }
+  .sim-field:focus { outline: none; border-color: var(--accent1); }
+  .sim-button {
+    background: var(--accent1);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-family: 'Sora', sans-serif;
+    font-weight: 700; font-size: .88rem;
+    cursor: pointer; transition: opacity .2s;
+    align-self: flex-start;
+  }
+  .sim-button:hover { opacity: .85; }
+  .sim-output {
+    background: var(--code-bg);
+    border-left: 1px solid var(--border);
+    padding: 16px;
+    overflow-y: auto;
+  }
+  .sim-output-title { font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  .sim-output-line { font-family: 'JetBrains Mono', monospace; font-size: .8rem; line-height: 1.8; color: var(--green); }
+  .sim-output-line.err { color: var(--accent4); }
+  .sim-generated-code {
+    background: var(--code-bg);
+    border-top: 1px solid var(--border);
+    padding: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .78rem;
+    line-height: 1.8;
+    max-height: 180px;
+    overflow-y: auto;
+  }
+
+  /* ── PROGRESS TRACKER ── */
+  .progress-bar-wrap { background: var(--border); border-radius: 100px; height: 6px; margin: 8px 0 16px; }
+  .progress-bar-fill { background: linear-gradient(90deg, var(--accent1), var(--accent2)); height: 100%; border-radius: 100px; transition: width .4s; }
+
+  /* ── HIGHLIGHT ── */
+  .hl { color: var(--accent3); font-weight: 700; }
+  .hl-green { color: var(--green); font-weight: 700; }
+  .hl-purple { color: var(--accent1); font-weight: 700; }
+  .hl-pink { color: var(--accent4); font-weight: 700; }
+
+  /* ── CASTING VISUAL ── */
+  .cast-flow {
+    display: flex; align-items: center; gap: 0;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    flex-wrap: wrap; gap: 0;
+  }
+  .cast-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 18px;
+    text-align: center;
+  }
+  .cast-box .type-name { font-size: .7rem; color: var(--muted); margin-bottom: 4px; }
+  .cast-box .val { font-family: 'JetBrains Mono', monospace; font-size: 1rem; font-weight: 700; }
+  .cast-arrow {
+    flex: 1; display: flex; flex-direction: column; align-items: center; padding: 0 10px;
+  }
+  .cast-arrow .func-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .72rem;
+    color: var(--accent3);
+    font-weight: 700;
+    background: rgba(247,162,62,.1);
+    border: 1px solid rgba(247,162,62,.3);
+    padding: 3px 10px; border-radius: 100px;
+    margin-bottom: 4px;
+  }
+  .cast-arrow-line { color: var(--muted); font-size: 1.2rem; }
+
+  /* ── COMPONENT GALLERY ── */
+  .comp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
+  .comp-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 18px 14px; text-align: center;
+    transition: border-color .2s, transform .2s;
+    cursor: default;
+  }
+  .comp-card:hover { border-color: var(--accent1); transform: translateY(-2px); }
+  .comp-icon { font-size: 1.8rem; margin-bottom: 8px; }
+  .comp-name { font-family: 'JetBrains Mono', monospace; font-size: .75rem; color: var(--accent2); font-weight: 700; }
+  .comp-desc { font-size: .72rem; color: var(--muted); margin-top: 4px; line-height: 1.5; }
+
+  /* ── ACCORDION ── */
+  .accordion { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 16px; }
+  .acc-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 16px 20px; cursor: pointer;
+    background: var(--card); transition: background .15s;
+  }
+  .acc-header:hover { background: rgba(124,106,247,.08); }
+  .acc-header h4 { font-size: .92rem; font-weight: 600; }
+  .acc-arrow { transition: transform .2s; color: var(--muted); }
+  .acc-body { display: none; padding: 20px; background: var(--surface); border-top: 1px solid var(--border); }
+  .acc-body.open { display: block; }
+
+  /* ── FORMATTING TABLE ── */
+  .format-demo {
+    background: var(--code-bg); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px;
+    font-family: 'JetBrains Mono', monospace; font-size: .82rem;
+    line-height: 1.9;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center; padding: 30px;
+    color: var(--muted); font-size: .8rem;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">📘 Grade 10 · Information Technology</div>
+  <h1>Chapter 2: Introduction to <span>Delphi</span></h1>
+  <p>Solution Development using a High-Level Programming Language — Aligned to CAPS 2024 & ATP 2026</p>
+  <div class="caps-chips">
+    <span class="chip">IDE & GUI</span>
+    <span class="chip">Components</span>
+    <span class="chip">Data Types</span>
+    <span class="chip">Variables</span>
+    <span class="chip">Casting</span>
+    <span class="chip">Operators</span>
+    <span class="chip">Formatting</span>
+    <span class="chip">Event Handling</span>
+    <span class="chip">Conditionals</span>
+    <span class="chip">Debugging</span>
+  </div>
+</div>
+
+<!-- NAV TABS -->
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="showTab('ide')">🖥️ IDE & GUI</button>
+  <button class="tab-btn" onclick="showTab('datatypes')">📦 Data Types</button>
+  <button class="tab-btn" onclick="showTab('casting')">🔄 Casting</button>
+  <button class="tab-btn" onclick="showTab('operators')">➕ Operators</button>
+  <button class="tab-btn" onclick="showTab('components')">🧩 Components</button>
+  <button class="tab-btn" onclick="showTab('events')">⚡ Events & Code</button>
+  <button class="tab-btn" onclick="showTab('formatting')">🖨️ Formatting</button>
+  <button class="tab-btn" onclick="showTab('conditionals')">🔀 Conditionals</button>
+  <button class="tab-btn" onclick="showTab('simulator')">🚀 Try It!</button>
+  <button class="tab-btn" onclick="showTab('quiz')">🧠 Quiz</button>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- TAB 1: IDE & GUI -->
+<!-- ══════════════════════════════════════════════ -->
+<div id="tab-ide" class="section active">
+  <div class="sec-header">
+    <div class="sec-icon" style="background:rgba(124,106,247,.15)">🖥️</div>
+    <div>
+      <h2>The Delphi IDE & GUI</h2>
+      <p>Understanding your development environment — where the magic happens!</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>💡 What is an IDE?</h3>
+    <p>An <span class="hl">IDE (Integrated Development Environment)</span> is a software application that provides everything a developer needs in one place. Delphi's IDE includes a <span class="hl-green">form designer (GUI builder)</span>, a <span class="hl-purple">code editor</span>, a <span class="hl">compiler</span>, and a <span class="hl-pink">debugger</span>.</p>
+
+    <div class="callout callout-info" style="margin-top:16px">
+      <div class="callout-icon">📌</div>
+      <div class="callout-body">
+        <strong>CAPS Key Term:</strong>
+        <p>Delphi uses <b>Event-Driven Programming (EDP)</b> — your code runs in response to events like button clicks, not from top to bottom like sequential programs.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- IDE Diagram -->
+  <div class="card">
+    <h3>🗺️ Parts of the Delphi IDE</h3>
+    <div class="ide-diagram">
+      <div class="ide-titlebar">
+        <div class="ide-dot" style="background:#f75e7c"></div>
+        <div class="ide-dot" style="background:#f7a23e"></div>
+        <div class="ide-dot" style="background:#43e97b"></div>
+        <div class="ide-title">Embarcadero RAD Studio — Project1.dproj</div>
+      </div>
+      <!-- Menu bar representation -->
+      <div style="background:#1a1a2e; padding:6px 16px; display:flex; gap:20px; border-bottom:1px solid var(--border); font-size:.7rem; color:var(--muted)">
+        <span style="color:var(--text)">File</span>
+        <span style="color:var(--text)">Edit</span>
+        <span style="color:var(--text)">View</span>
+        <span style="color:var(--text)">Project</span>
+        <span style="color:var(--text)">Run</span>
+        <span style="color:var(--text)">Component</span>
+        <span style="color:var(--accent1)">▶ Run (F9)</span>
+      </div>
+      <!-- Component Palette -->
+      <div style="background:#111124; padding:6px 16px; border-bottom:1px solid var(--border); font-size:.68rem; color:var(--muted); display:flex; gap:16px; align-items:center">
+        <span style="color:var(--accent3); font-weight:700">Component Palette:</span>
+        <span style="background:var(--card); padding:3px 8px; border-radius:4px; color:var(--text)">TButton</span>
+        <span style="background:var(--card); padding:3px 8px; border-radius:4px; color:var(--text)">TLabel</span>
+        <span style="background:var(--card); padding:3px 8px; border-radius:4px; color:var(--text)">TEdit</span>
+        <span style="background:var(--card); padding:3px 8px; border-radius:4px; color:var(--text)">TMemo</span>
+        <span style="background:var(--card); padding:3px 8px; border-radius:4px; color:var(--text)">TListBox</span>
+        <span style="color:var(--accent2)">+ more…</span>
+      </div>
+      <div class="ide-body">
+        <!-- Project manager -->
+        <div class="ide-panel">
+          <div class="ide-panel-title">Project Manager</div>
+          <div class="ide-tree-item">📁 Project1</div>
+          <div class="ide-tree-item">  📁 Forms</div>
+          <div class="ide-tree-item active">    📄 Unit1.pas</div>
+          <div class="ide-tree-item">  📄 Project1.dpr</div>
+          <br>
+          <div class="ide-panel-title">Structure</div>
+          <div class="ide-tree-item">TForm1</div>
+          <div class="ide-tree-item active">  TButton1</div>
+          <div class="ide-tree-item">  TLabel1</div>
+          <div class="ide-tree-item">  TEdit1</div>
+        </div>
+        <!-- Form designer + code -->
+        <div class="ide-panel" style="padding:0">
+          <div style="background:#222; padding:6px 10px; font-size:.65rem; color:var(--muted); display:flex; gap:8px; border-bottom:1px solid var(--border)">
+            <span style="color:var(--accent2); border-bottom:2px solid var(--accent2); padding-bottom:4px">Design</span>
+            <span>Code</span>
+          </div>
+          <div style="padding:10px">
+            <div class="ide-form">
+              <div class="ide-form-title">📋 Form1 — My First Delphi App</div>
+              <span class="sim-label">Enter your name:</span>
+              <input class="sim-edit" placeholder="Type here..." disabled style="width:140px">
+              <button class="sim-btn">Greet Me!</button>
+              <div style="margin-top:8px; font-size:.62rem; color:#555">Label1: (output will appear here)</div>
+            </div>
+            <div style="font-size:.68rem; color:var(--muted); margin-top:8px; padding-left:4px">
+              ↑ <span style="color:var(--accent2)">Form Designer</span> — Drag & drop components here
+            </div>
+          </div>
+        </div>
+        <!-- Object Inspector -->
+        <div class="ide-panel">
+          <div class="ide-panel-title">Object Inspector</div>
+          <div style="font-size:.62rem; color:var(--accent3); margin-bottom:6px">TButton1</div>
+          <table style="font-size:.62rem; width:100%">
+            <tr><td style="color:var(--muted); padding:2px 0">Caption</td><td style="color:var(--green)">'Greet Me!'</td></tr>
+            <tr><td style="color:var(--muted); padding:2px 0">Name</td><td style="color:var(--green)">'btnGreet'</td></tr>
+            <tr><td style="color:var(--muted); padding:2px 0">Width</td><td style="color:var(--accent3)">80</td></tr>
+            <tr><td style="color:var(--muted); padding:2px 0">Height</td><td style="color:var(--accent3)">25</td></tr>
+            <tr><td style="color:var(--muted); padding:2px 0">Enabled</td><td style="color:var(--accent1)">True</td></tr>
+            <tr><td style="color:var(--muted); padding:2px 0">Visible</td><td style="color:var(--accent1)">True</td></tr>
+          </table>
+          <div style="font-size:.62rem; color:var(--accent2); margin-top:10px; border-top:1px solid var(--border); padding-top:6px">Events tab:</div>
+          <div class="ide-obj-item selected">OnClick ✦ btnGreetClick</div>
+          <div class="ide-obj-item">OnMouseEnter</div>
+          <div class="ide-obj-item">OnMouseLeave</div>
+        </div>
+      </div>
+    </div>
+    <div class="grid-2" style="margin-top:20px">
+      <div class="callout callout-info">
+        <div class="callout-icon">🎨</div>
+        <div class="callout-body">
+          <strong>Form Designer (GUI Builder)</strong>
+          <p>The visual area where you drag and drop components to build your user interface without writing code for the layout.</p>
+        </div>
+      </div>
+      <div class="callout callout-tip">
+        <div class="callout-icon">🔍</div>
+        <div class="callout-body">
+          <strong>Object Inspector</strong>
+          <p>Set <b>Properties</b> (what it looks like) and <b>Events</b> (what it does) for each selected component.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Key Terms -->
+  <div class="card">
+    <h3>📖 Key Terminology</h3>
+    <table>
+      <thead><tr><th>Term</th><th>Meaning</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge badge-purple">IDE</span></td><td>Integrated Development Environment — all tools in one app</td><td>Delphi / RAD Studio</td></tr>
+        <tr><td><span class="badge badge-purple">GUI</span></td><td>Graphical User Interface — visual interface using windows, buttons</td><td>Windows, Delphi Form</td></tr>
+        <tr><td><span class="badge badge-orange">Component</span></td><td>A ready-made visual or non-visual building block</td><td>TButton, TLabel, TEdit</td></tr>
+        <tr><td><span class="badge badge-orange">Property</span></td><td>A characteristic of a component</td><td>Caption, Color, Width</td></tr>
+        <tr><td><span class="badge badge-green">Event</span></td><td>An action that triggers code to run</td><td>OnClick, OnCreate</td></tr>
+        <tr><td><span class="badge badge-green">Event Handler</span></td><td>The code (procedure) that runs when an event occurs</td><td><code>procedure btnOKClick</code></td></tr>
+        <tr><td><span class="badge badge-red">Unit</span></td><td>A Pascal file (.pas) containing your code</td><td>Unit1.pas</td></tr>
+        <tr><td><span class="badge badge-red">Project</span></td><td>A collection of all files making up your application</td><td>Project1.dpr</td></tr>
+        <tr><td><span class="badge badge-purple">Compiler</span></td><td>Translates your code into an executable (.exe)</td><td>Press F9 to compile &amp; run</td></tr>
+        <tr><td><span class="badge badge-orange">Debugger</span></td><td>Tool to find and fix errors (bugs) in your code</td><td>Breakpoints, Step Over</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- TAB 2: DATA TYPES & VARIABLES -->
+<!-- ══════════════════════════════════════════════ -->
+<div id="tab-datatypes" class="section">
+  <div class="sec-header">
+    <div class="sec-icon" style="background:rgba(62,207,207,.15)">📦</div>
+    <div>
+      <h2>Data Types & Variables</h2>
+      <p>Understanding what kinds of data your program can store and manipulate.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🗃️ What is a Variable?</h3>
+    <p>A <span class="hl">variable</span> is a named storage location in memory that holds a value. Think of it as a labelled box — you put something in, you can take it out, and you can change what's inside. Variables must be <span class="hl-purple">declared</span> before use in Delphi.</p>
+    <div class="code-block">
+      <span class="label">Delphi Pascal</span>
+      <span class="keyword">var</span><br>
+      &nbsp;&nbsp;iAge : <span class="type">Integer</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Whole number</span><br>
+      &nbsp;&nbsp;fPrice : <span class="type">Real</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Decimal number</span><br>
+      &nbsp;&nbsp;sName : <span class="type">String</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Text</span><br>
+      &nbsp;&nbsp;bPassed : <span class="type">Boolean</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// True or False</span><br>
+      &nbsp;&nbsp;cGrade : <span class="type">Char</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Single character</span>
+    </div>
+    <div class="callout callout-warn">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <strong>Naming Conventions (Important for tests!)</strong>
+        <p>Use a <b>prefix</b> to show the data type: <code>i</code> for Integer, <code>f</code> for Float/Real, <code>s</code> for String, <code>b</code> for Boolean, <code>c</code> for Char. Use meaningful names: <code>iAge</code> not just <code>x</code>.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Types Table -->
+  <div class="card">
+    <h3>📊 Data Types in Delphi (Grade 10)</h3>
+    <table>
+      <thead><tr><th>Data Type</th><th>Keyword</th><th>What it stores</th><th>Example values</th><th>Memory</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-purple">Integer</span></td>
+          <td><code>Integer</code></td>
+          <td>Whole numbers (no decimal)</td>
+          <td><code>0, 42, -100, 2026</code></td>
+          <td>4 bytes</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-orange">Real / Float</span></td>
+          <td><code>Real</code> / <code>Single</code> / <code>Double</code></td>
+          <td>Decimal (floating point) numbers</td>
+          <td><code>3.14, -0.5, 99.9</code></td>
+          <td>4–8 bytes</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-green">String</span></td>
+          <td><code>String</code></td>
+          <td>Text — sequence of characters</td>
+          <td><code>'Hello', 'Grade 10', '123'</code></td>
+          <td>Variable</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-red">Boolean</span></td>
+          <td><code>Boolean</code></td>
+          <td>Logical true or false only</td>
+          <td><code>True</code> / <code>False</code></td>
+          <td>1 byte</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-purple">Char</span></td>
+          <td><code>Char</code></td>
+          <td>A single character</td>
+          <td><code>'A', '5', '!'</code></td>
+          <td>1 byte</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="callout callout-tip" style="margin-top:16px">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <strong>Remember!</strong>
+        <p><code>'123'</code> (String) ≠ <code>123</code> (Integer). You cannot do maths on a String! You need <b>casting</b> to convert between types.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Assigning values -->
+  <div class="card">
+    <h3>✏️ Assigning Values to Variables</h3>
+    <p>Use the <span class="hl">assignment operator <code>:=</code></span> (colon-equals) to store a value in a variable.</p>
+    <div class="code-block">
+      <span class="label">Delphi Pascal</span>
+      <span class="comment">// Declaring and assigning variables</span><br>
+      <span class="keyword">var</span><br>
+      &nbsp;&nbsp;iAge : <span class="type">Integer</span>;<br>
+      &nbsp;&nbsp;sName : <span class="type">String</span>;<br>
+      &nbsp;&nbsp;fTax : <span class="type">Real</span>;<br>
+      &nbsp;&nbsp;bPassed : <span class="type">Boolean</span>;<br>
+      <br>
+      <span class="keyword">begin</span><br>
+      &nbsp;&nbsp;iAge := <span class="number">16</span>;<br>
+      &nbsp;&nbsp;sName := <span class="string">'Thabo'</span>;<br>
+      &nbsp;&nbsp;fTax := <span class="number">0.15</span>;<br>
+      &nbsp;&nbsp;bPassed := <span class="keyword">True</span>;<br>
+      <br>
+      &nbsp;&nbsp;<span class="comment">// Reading from a TEdit (user input)</span><br>
+      &nbsp;&nbsp;sName := edtName.<span class="func">Text</span>;<br>
+      &nbsp;&nbsp;iAge := <span class="func">StrToInt</span>(edtAge.Text);&nbsp;&nbsp;<span class="comment">// Casting needed!</span><br>
+      <span class="keyword">end</span>;
+    </div>
+
+    <div class="grid-2" style="margin-top:16px">
+      <div class="callout callout-info">
+        <div class="callout-icon">📥</div>
+        <div class="callout-body">
+          <strong>Input from TEdit</strong>
+          <p><code>edtName.Text</code> always gives a <b>String</b>. Use casting to convert to Integer or Real when needed.</p>
+        </div>
+      </div>
+      <div class="callout callout-tip">
+        <div class="callout-icon">📤</div>
+        <div class="callout-body">
+          <strong>Output to TLabel</strong>
+          <p><code>lblResult.Caption := 'Hello ' + sName;</code><br>
+          <code>lblAnswer.Caption := IntToStr(iTotal);</code></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Constants -->
+  <div class="card">
+    <h3>🔒 Constants vs Variables</h3>
+    <div class="grid-2">
+      <div>
+        <p style="color:var(--accent2); font-weight:700; margin-bottom:8px">Variable — value CAN change</p>
+        <div class="code-block">
+          <span class="keyword">var</span><br>
+          &nbsp;&nbsp;iScore : <span class="type">Integer</span>;<br>
+          <span class="keyword">begin</span><br>
+          &nbsp;&nbsp;iScore := <span class="number">0</span>;<br>
+          &nbsp;&nbsp;iScore := iScore + <span class="number">10</span>; <span class="comment">// OK</span><br>
+          <span class="keyword">end</span>;
+        </div>
+      </div>
+      <div>
+        <p style="color:var(--accent3); font-weight:700; margin-bottom:8px">Constant — value CANNOT change</p>
+        <div class="code-block">
+          <span class="keyword">const</span><br>
+          &nbsp;&nbsp;VAT_RATE = <span class="number">0.15</span>;<br>
+          &nbsp;&nbsp;MAX_MARKS = <span class="number">100</span>;<br>
+          <span class="keyword">begin</span><br>
+          &nbsp;&nbsp;<span class="comment">// VAT_RATE := 0.20; ← ERROR!</span><br>
+          <span class="keyword">end</span>;
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- TAB 3: CASTING -->
+<!-- ══════════════════════════════════════════════ -->
+<div id="tab-casting" class="section">
+  <div class="sec-header">
+    <div class="sec-icon" style="background:rgba(247,162,62,.15)">🔄</div>
+    <div>
+      <h2>Type Casting (Conversion)</h2>
+      <p>Converting between data types — essential for input/output in Delphi.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🤔 Why Do We Need Casting?</h3>
+    <p>Everything from a <span class="hl">TEdit</span> comes in as a <span class="hl-green">String</span>. You cannot do maths on a String. You need to <span class="hl-purple">cast</span> (convert) it to an Integer or Real first. Similarly, to display a number in a TLabel, you must convert it <span class="hl-pink">back to String</span>.</p>
+    <div class="cast-flow" style="margin-top:16px">
+      <div class="cast-box">
+        <div class="type-name">TEdit.Text (String)</div>
+        <div class="val" style="color:var(--accent4)">'42'</div>
+      </div>
+      <div class="cast-arrow">
+        <div class="func-name">StrToInt( )</div>
+        <div class="cast-arrow-line">→</div>
+      </div>
+      <div class="cast-box">
+        <div class="type-name">Integer Variable</div>
+        <div class="val" style="color:var(--accent3)">42</div>
+      </div>
+      <div class="cast-arrow">
+        <div class="func-name">✦ maths ✦</div>
+        <div class="cast-arrow-line">→</div>
+      </div>
+      <div class="cast-box">
+        <div class="type-name">Result (Integer)</div>
+        <div class="val" style="color:var(--accent3)">84</div>
+      </div>
+      <div class="cast-arrow">
+        <div class="func-name">IntToStr( )</div>
+        <div class="cast-arrow-line">→</div>
+      </div>
+      <div class="cast-box">
+        <div class="type-name">TLabel.Caption (String)</div>
+        <div class="val" style="color:var(--green)">'84'</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Casting Functions -->
+  <div class="card">
+    <h3>🛠️ Casting Functions — CAPS Required for Grade 10</h3>
+    <table>
+      <thead><tr><th>Function</th><th>Converts FROM → TO</th><th>Example</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code style="color:var(--accent3)">StrToInt(s)</code></td>
+          <td>String → Integer</td>
+          <td><code>StrToInt('42')</code></td>
+          <td><code>42</code> (Integer)</td>
+        </tr>
+        <tr>
+          <td><code style="color:var(--accent3)">IntToStr(i)</code></td>
+          <td>Integer → String</td>
+          <td><code>IntToStr(100)</code></td>
+          <td><code>'100'</code> (String)</td>
+        </tr>
+        <tr>
+          <td><code style="color:var(--accent3)">StrToFloat(s)</code></td>
+          <td>String → Real/Float</td>
+          <td><code>StrToFloat('3.14')</code></td>
+          <td><code>3.14</code> (Real)</td>
+        </tr>
+        <tr>
+          <td><code style="color:var(--accent3)">FloatToStr(f)</code></td>
+          <td>Real/Float → String</td>
+          <td><code>FloatToStr(3.14)</code></td>
+          <td><code>'3.14'</code> (String)</td>
+        </tr>
+        <tr>
+          <td><code style="color:var(--accent3)">FloatToStrF(f, fmt, prec, dig)</code></td>
+          <td>Real → Formatted String</td>
+          <td><code>FloatToStrF(3.5, ffFixed, 8, 2)</code></td>
+          <td><code>'3.50'</code> (2 decimals)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Worked Examples -->
+  <div class="card">
+    <h3>📝 Worked Example: VAT Calculator</h3>
+    <p style="margin-bottom:16px">The user enters a price (String), we calculate VAT (15%), and display the result.</p>
+    <div class="code-block">
+      <span class="label">Delphi Pascal</span>
+      <span class="comment">// Step 1: Declare variables</span><br>
+      <span class="keyword">var</span><br>
+      &nbsp;&nbsp;fPrice, fVAT, fTotal : <span class="type">Real</span>;<br>
+      &nbsp;&nbsp;sOutput : <span class="type">String</span>;<br>
+      <br>
+      <span class="keyword">begin</span><br>
+      &nbsp;&nbsp;<span class="comment">// Step 2: Get input — CAST from String to Real</span><br>
+      &nbsp;&nbsp;fPrice := <span class="func">StrToFloat</span>(edtPrice.Text);<br>
+      <br>
+      &nbsp;&nbsp;<span class="comment">// Step 3: Process / Calculate</span><br>
+      &nbsp;&nbsp;fVAT := fPrice * <span class="number">0.15</span>;<br>
+      &nbsp;&nbsp;fTotal := fPrice + fVAT;<br>
+      <br>
+      &nbsp;&nbsp;<span class="comment">// Step 4: Output — CAST back to String with 2 decimal places</span><br>
+      &nbsp;&nbsp;lblVAT.Caption := <span class="string">'VAT: R'</span> + <span class="func">FloatToStrF</span>(fVAT, ffFixed, <span class="number">8</span>, <span class="number">2</span>);<br>
+      &nbsp;&nbsp;lblTotal.Caption := <span class="string">'Total: R'</span> + <span class="func">FloatToStrF</span>(fTotal, ffFixed, <span class="number">8</span>, <span class="number">2</span>);<br>
+      <span class="keyword">end</span>;
+    </div>
+
+    <div class="callout callout-warn" style="margin-top:16px">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <strong>Common Mistake!</strong>
+        <p>If you forget to cast: <code>lblResult.Caption := iAge + 5;</code> — this will cause a <b>type mismatch error</b> because you're trying to assign an Integer to a String property. Correct: <code>lblResult.Caption := IntToStr(iAge + 5);</code></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mathematical built-in methods -->
+  <div class="card">
+    <h3>🔢 Built-in Mathematical Functions (Grade 10)</h3>
+    <table>
+      <thead><tr><th>Function</th><th>Purpose</th><th>Example</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td><code style="color:var(--accent3)">Round(x)</code></td><td>Round to nearest integer</td><td><code>Round(4.7)</code></td><td><code>5</code></td></tr>
+        <tr><td><code style="color:var(--accent3)">Trunc(x)</code></td><td>Remove decimal (truncate)</td><td><code>Trunc(4.9)</code></td><td><code>4</code></td></tr>
+        <tr><td><code style="color:var(--accent3)">Sqr(x)</code></td><td>Square of a number (x²)</td><td><code>Sqr(5)</code></td><td><code>25</code></td></tr>
+        <tr><td><code style="color:var(--accent3)">Sqrt(x)</code></td><td>Square root of a number</td><td><code>Sqrt(25)</code></td><td><code>5.0</code></td></tr>
+        <tr><td><code style="color:var(--accent3)">Random(n)</code></td><td>Random integer from 0 to n-1</td><td><code>Random(6)</code></td><td><code>0..5</code></td></tr>
+      </tbody>
+    </table>
+    <div class="callout callout-tip" style="margin-top:14px">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <strong>Modulus (DIV remainder)</strong>
+        <p>Use <code>mod</code> for the remainder: <code>17 mod 5 = 2</code>. Use <code>div</code> for integer division: <code>17 div 5 = 3</code>. These are very commonly tested!</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- TAB 4: OPERATORS -->
+<!-- ══════════════════════════════════════════════ -->
+<div id="tab-operators" class="section">
+  <div class="sec-header">
+    <div class="sec-icon" style="background:rgba(67,233,123,.15)">➕</div>
+    <div>
+      <h2>Operators</h2>
+      <p>Arithmetic, relational, and Boolean operators — the building blocks of all calculations.</p>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>➕ Arithmetic Operators</h3>
+      <table>
+        <thead><tr><th>Operator</th><th>Meaning</th><th>Example</th><th>Result</th></tr></thead>
+        <tbody>
+          <tr><td><code class="hl">+</code></td><td>Addition</td><td><code>5 + 3</code></td><td><code>8</code></td></tr>
+          <tr><td><code class="hl">-</code></td><td>Subtraction</td><td><code>10 - 4</code></td><td><code>6</code></td></tr>
+          <tr><td><code class="hl">*</code></td><td>Multiplication</td><td><code>6 * 7</code></td><td><code>42</code></td></tr>
+          <tr><td><code class="hl">/</code></td><td>Division (Real result)</td><td><code>7 / 2</code></td><td><code>3.5</code></td></tr>
+          <tr><td><code class="hl">div</code></td><td>Integer division</td><td><code>7 div 2</code></td><td><code>3</code></td></tr>
+          <tr><td><code class="hl">mod</code></td><td>Modulus (remainder)</td><td><code>7 mod 2</code></td><td><code>1</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3>⚖️ Relational (Comparison) Operators</h3>
+      <table>
+        <thead><tr><th>Operator</th><th>Meaning</th><th>Example (True)</th></tr></thead>
+        <tbody>
+          <tr><td><code class="hl">=</code></td><td>Equal to</td><td><code>5 = 5</code></td></tr>
+          <tr><td><code class="hl">&lt;&gt;</code></td><td>Not equal to</td><td><code>3 &lt;&gt; 7</code></td></tr>
+          <tr><td><code class="hl">&lt;</code></td><td>Less than</td><td><code>4 &lt; 9</code></td></tr>
+          <tr><td><code class="hl">&gt;</code></td><td>Greater than</td><td><code>9 &gt; 4</code></td></tr>
+          <tr><td><code class="hl">&lt;=</code></td><td>Less than or equal to</td><td><code>5 &lt;= 5</code></td></tr>
+          <tr><td><code class="hl">&gt;=</code></td><td>Greater than or equal to</td><td><code>7 &gt;= 3</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🧠 Boolean (Logical) Operators</h3>
+    <p style="margin-bottom:16px">Boolean operators combine conditions. Result is always <code>True</code> or <code>False</code>.</p>
+    <div class="grid-3">
+      <div style="background:var(--code-bg); border:1px solid var(--border); border-radius:10px; padding:16px">
+        <p style="color:var(--accent1); font-weight:700; margin-bottom:10px">AND — BOTH must be true</p>
+        <table style="font-size:.8rem">
+          <tr><th>A</th><th>B</th><th>A AND B</th></tr>
+          <tr><td>True</td><td>True</td><td style="color:var(--green)">True ✓</td></tr>
+          <tr><td>True</td><td>False</td><td style="color:var(--accent4)">False ✗</td></tr>
+          <tr><td>False</td><td>True</td><td style="color:var(--accent4)">False ✗</td></tr>
+          <tr><td>False</td><td>False</td><td style="color:var(--accent4)">False ✗</td></tr>
+        </table>
+      </div>
+      <div style="background:var(--code-bg); border:1px solid var(--border); border-radius:10px; padding:16px">
+        <p style="color:var(--accent2); font-weight:700; margin-bottom:10px">OR — AT LEAST ONE must be true</p>
+        <table style="font-size:.8rem">
+          <tr><th>A</th><th>B</th><th>A OR B</th></tr>
+          <tr><td>True</td><td>True</td><td style="color:var(--green)">True ✓</td></tr>
+          <tr><td>True</td><td>False</td><td style="color:var(--green)">True ✓</td></tr>
+          <tr><td>False</td><td>True</td><td style="color:var(--green)">True ✓</td></tr>
+          <tr><td>False</td><td>False</td><td style="color:var(--accent4)">False ✗</td></tr>
+        </table>
+      </div>
+      <div style="background:var(--code-bg); border:1px solid var(--border); border-radius:10px; padding:16px">
+        <p style="color:var(--accent3); font-weight:700; margin-bottom:10px">NOT — REVERSES the value</p>
+        <table style="font-size:.8rem">
+          <tr><th>A</th><th>NOT A</th></tr>
+          <tr><td>True</td><td style="color:var(--accent4)">False ✗</td></tr>
+          <tr><td>False</td><td style="color:var(--green)">True ✓</td></tr>
+        </table>
+        <br>
+        <p style="font-size:.78rem; color:var(--muted)">Example:<br><code>NOT (iAge &lt; 18)</code><br>= person is 18 or older</p>
+      </div>
+    </div>
+    <div class="code-block" style="margin-top:16px">
+      <span class="label">Delphi Pascal</span>
+      <span class="comment">// AND example</span><br>
+      <span class="keyword">if</span> (iAge >= <span class="number">16</span>) <span class="keyword">and</span> (iAge <= <span class="number">18</span>) <span class="keyword">then</span><br>
+      &nbsp;&nbsp;lblResult.Caption := <span class="string">'You qualify!'</span>;<br>
+      <br>
+      <span class="comment">// OR example  </span><br>
+      <span class="keyword">if</span> (sCode = <span class="string">'A'</span>) <span class="keyword">or</span> (sCode = <span class="string">'B'</span>) <span class="keyword">then</span><br>
+      &nbsp;&nbsp;lblResult.Caption := <span class="string">'Good grade!'</span>;
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📐 Order of Precedence (BODMAS applies!)</h3>
+    <div style="display:flex; flex-direction:column; gap:0">
+      <div style="background:rgba(247,94,124,.1); border:1px solid rgba(247,94,124,.3); border-radius:8px; padding:12px 16px; margin-bottom:4px; display:flex; align-items:center; gap:12px">
+        <span style="background:var(--accent4); color:white; width:28px; height:28px; border-radius:6px; display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0">1</span>
+        <div><span style="color:var(--accent4); font-weight:700">Brackets ( )</span> — highest priority, evaluated first</div>
+      </div>
+      <div style="background:rgba(124,106,247,.1); border:1px solid rgba(124,106,247,.3); border-radius:8px; padding:12px 16px; margin-bottom:4px; display:flex; align-items:center; gap:12px">
+        <span style="background:var(--accent1); color:white; width:28px; height:28px; border-radius:6px; display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0">2</span>
+        <div><span style="color:var(--accent1); font-weight:700">NOT</span> — logical negation</div>
+      </div>
+      <div style="background:rgba(247,162,62,.1); border:1px solid rgba(247,162,62,.3); border-radius:8px; padding:12px 16px; margin-bottom:4px; display:flex; align-items:center; gap:12px">
+        <span style="background:var(--accent3); color:white; width:28px; height:28px; border-radius:6px; display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0">3</span>
+        <div><span style="color:var(--accent3); font-weight:700">* / div mod</span> — multiplication and division</div>
+      </div>
+      <div style="background:rgba(62,207,207,.1); border:1px solid rgba(62,207,207,.3); border-radius:8px; padding:12px 16px; margin-bottom:4px; display:flex; align-items:center; gap:12px">
+        <span style="background:var(--accent2); color:black; width:28px; height:28px; border-radius:6px; display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0">4</span>
+        <div><span style="color:var(--accent2); font-weight:700">+ - </span> — addition and subtraction</div>
+      </div>
+      <div style="background:rgba(67,233,123,.1); border:1px solid rgba(67,233,123,.3); border-radius:8px; padding:12px 16px; display:flex; align-items:center; gap:12px">
+        <span style="background:var(--green); color:black; width:28px; height:28px; border-radius:6px; display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0">5</span>
+        <div><span style="color:var(--green); font-weight:700">= &lt;&gt; &lt; &gt; &lt;= &gt;=</span> — relational operators (lowest)</div>
+      </div>
+    </div>
+    <div class="code-block" style="margin-top:16px">
+      <span class="label">Example</span>
+      <span class="comment">// Without brackets: 2 + 3 * 4 = 14 (not 20!)</span><br>
+      iResult := <span class="number">2</span> + <span class="number">3</span> * <span class="number">4</span>;&nbsp;&nbsp;&nbsp;<span class="comment">// = 14 (multiply first)</span><br>
+      iResult := (<span class="number">2</span> + <span class="number">3</span>) * <span class="number">4</span>;&nbsp;&nbsp;&nbsp;<span class="comment">// = 20 (brackets first)</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- TAB 5: COMPONENTS -->
+<!-- ══════════════════════════════════════════════ -->
+<div id="tab-components" class="section">
+  <div class="sec-header">
+    <div class="sec-icon" style="background:rgba(247,94,124,.15)">🧩</div>
+    <div>
+      <h2>Delphi Components (Grade 10)</h2>
+      <p>The building blocks of your Graphical User Interface.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🎯 What are Components?</h3>
+    <p>Components are pre-built objects you place on a form. They have <span class="hl">Properties</span> (appearance/behaviour), <span class="hl-green">Events</span> (what triggers code), and <span class="hl-purple">Methods</span> (actions you can call in code). You access them using <code>componentName.PropertyName</code>.</p>
+  </div>
+
+  <div class="card">
+    <h3>🗂️ Components Required for Grade 10</h3>
+    <div class="comp-grid">
+      <div class="comp-card">
+        <div class="comp-icon">🪟</div>
+        <div class="comp-name">TForm</div>
+        <div class="comp-desc">The window/container for all other components</div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-icon">🔘</div>
+        <div class="comp-name">TButton</div>
+        <div class="comp-desc">Clickable button that triggers OnClick event</div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-icon">🏷️</div>
+        <div class="comp-name">TLabel</div>
+        <div class="comp-desc">Displays text output (read-only by user)</div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-icon">📝</div>
+        <div class="comp-name">TEdit</div>
+        <div class="comp-desc">Single-line text input from user</div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-icon">📄</div>
+        <div class="comp-name">TMemo</div>
+        <div class="comp-desc">Multi-line text input/output area</div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-icon">📋</div>
+        <div class="comp-name">TListBox</div>
+        <div class="comp-desc">A list of items the user can select from</div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-icon">🔽</div>
+        <div class="comp-name">TComboBox</div>
+        <div class="comp-desc">Dropdown list (select one item)</div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-icon">⭕</div>
+        <div class="comp-name">TRadioButton</div>
+        <div class="comp-desc">Single-choice selection (only one active)</div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-icon">☑️</div>
+        <div class="comp-name">TCheckBox</div>
+        <div class="comp-desc">On/off toggle (can have multiple checked)</div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-icon">📻</div>
+        <div class="comp-name">TRadioGroup</div>
+        <div class="comp-desc">Groups radio buttons together automatically</div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-icon">🔢</div>
+        <div class="comp-name">TSpinEdit</div>
+        <div class="comp-desc">Numeric input with up/down arrows</div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-icon">🖼️</div>
+        <div class="comp-name">TImage</div>
+        <div class="comp-desc">Displays a picture/graphic on the form</div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-icon">▭</div>
+        <div class="comp-name">TPanel</div>
+        <div class="comp-desc">Container to group and organise components</div>
+      </div>
+      <div class="comp-card">
+        <div class="comp-icon">⏱️</div>
+        <div class="comp-name">TTimer</div>
+        <div class="comp-desc">Triggers OnTimer event at set intervals</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Common Properties -->
+  <div class="card">
+    <h3>⚙️ Key Properties You Must Know</h3>
+    <table>
+      <thead><tr><th>Component</th><th>Property</th><th>Type</th><th>Purpose / Example</th></tr></thead>
+      <tbody>
+        <tr><td>All</td><td><code>Name</code></td><td>String</td><td>Identifier used in code: <code>btnCalc</code>, <code>lblResult</code></td></tr>
+        <tr><td>All</td><td><code>Visible</code></td><td>Boolean</td><td>Show/hide: <code>lblError.Visible := False;</code></td></tr>
+        <tr><td>All</td><td><code>Enabled</code></td><td>Boolean</td><td>Enable/disable: <code>btnOK.Enabled := True;</code></td></tr>
+        <tr><td>All</td><td><code>Color</code></td><td>TColor</td><td>Background colour: <code>lblResult.Color := clYellow;</code></td></tr>
+        <tr><td>TLabel</td><td><code>Caption</code></td><td>String</td><td>The text displayed: <code>lblName.Caption := 'Hello!';</code></td></tr>
+        <tr><td>TEdit</td><td><code>Text</code></td><td>String</td><td>User input: <code>sName := edtName.Text;</code></td></tr>
+        <tr><td>TMemo</td><td><code>Lines</code></td><td>TStrings</td><td>Add text: <code>mmoOutput.Lines.Add('Result: ' + s);</code></td></tr>
+        <tr><td>TCheckBox</td><td><code>Checked</code></td><td>Boolean</td><td><code>if chkAgree.Checked then ...</code></td></tr>
+        <tr><td>TRadioGroup</td><td><code>ItemIndex</code></td><td>Integer</td><td>Which item selected (0=first): <code>if rgGender.ItemIndex = 0 then sGender := 'Male';</code></td></tr>
+        <tr><td>TListBox</td><td><code>Items</code></td><td>TStrings</td><td>Add: <code>lbNames.Items.Add('Thabo');</code></td></tr>
+        <tr><td>TSpinEdit</td><td><code>Value</code></td><td>Integer</td><td>Current value: <code>iQty := spnQty.Value;</code></td></tr>
+        <tr><td>TForm</td><td><code>Caption</code></td><td>String</td><td>Window title bar text</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>📣 ShowMessage & InputBox</h3>
+    <div class="grid-2">
+      <div>
+        <p style="color:var(--accent2); font-weight:700; margin-bottom:10px">ShowMessage — display a popup message</p>
+        <div class="code-block">
+          <span class="func">ShowMessage</span>(<span class="string">'Hello World!'</span>);<br><br>
+          <span class="func">ShowMessage</span>(<span class="string">'Your total is: '</span><br>
+          &nbsp;&nbsp;+ <span class="func">FloatToStrF</span>(fTotal, ffFixed, <span class="number">8</span>, <span class="number">2</span>));
+        </div>
+      </div>
+      <div>
+        <p style="color:var(--accent3); font-weight:700; margin-bottom:10px">InputBox — get text from a popup dialog</p>
+        <div class="code-block">
+          sName := <span class="func">InputBox</span>(<br>
+          &nbsp;&nbsp;<span class="string">'Enter Name'</span>,&nbsp;&nbsp;&nbsp;<span class="comment">// Title</span><br>
+          &nbsp;&nbsp;<span class="string">'Type your name:'</span>, <span class="comment">// Prompt</span><br>
+          &nbsp;&nbsp;<span class="string">'Default'</span>);&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Default</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- TAB 6: EVENTS & CODE -->
+<!-- ══════════════════════════════════════════════ -->
+<div id="tab-events" class="section">
+  <div class="sec-header">
+    <div class="sec-icon" style="background:rgba(67,233,123,.15)">⚡</div>
+    <div>
+      <h2>Events & Writing Code</h2>
+      <p>How your program responds to user actions — the heart of event-driven programming.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>⚡ What is an Event?</h3>
+    <p>In Delphi, code does not run automatically from top to bottom. It runs in response to <span class="hl">events</span> — actions performed by the user or the system. Each event has an <span class="hl-purple">event handler</span> (a procedure/method) that contains the code to execute.</p>
+    
+    <div class="grid-3" style="margin-top:16px">
+      <div class="callout callout-info">
+        <div class="callout-icon">🖱️</div>
+        <div class="callout-body">
+          <strong>OnClick</strong>
+          <p>Fires when user clicks the component (button, checkbox, etc.)</p>
+        </div>
+      </div>
+      <div class="callout callout-tip">
+        <div class="callout-icon">🚀</div>
+        <div class="callout-body">
+          <strong>OnCreate</strong>
+          <p>Fires when the form is first created — good for initialisation</p>
+        </div>
+      </div>
+      <div class="callout callout-warn">
+        <div class="callout-icon">⏱️</div>
+        <div class="callout-body">
+          <strong>OnTimer</strong>
+          <p>Fires repeatedly at set Interval (milliseconds) — for animations & clocks</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Structure of code -->
+  <div class="card">
+    <h3>🏗️ Structure of a Delphi Unit</h3>
+    <div class="code-block">
+      <span class="label">Unit1.pas</span>
+      <span class="keyword">unit</span> Unit1;<br><br>
+      <span class="keyword">interface</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Declarations (auto-generated)</span><br>
+      <span class="keyword">uses</span><br>
+      &nbsp;&nbsp;Winapi.Windows, Vcl.Forms, Vcl.Controls, Vcl.StdCtrls, ...;<br><br>
+      <span class="keyword">type</span><br>
+      &nbsp;&nbsp;TForm1 = <span class="keyword">class</span>(TForm)<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;btnGreet: TButton;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Component declared</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;edtName: TEdit;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;lblOutput: TLabel;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">procedure</span> <span class="func">btnGreetClick</span>(Sender: TObject);&nbsp;<span class="comment">// Event handler declared</span><br>
+      &nbsp;&nbsp;<span class="keyword">end</span>;<br><br>
+      <span class="keyword">var</span><br>
+      &nbsp;&nbsp;Form1: TForm1;<br><br>
+      <span class="keyword">implementation</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// YOUR CODE GOES HERE</span><br>
+      {$R *.dfm}<br><br>
+      <span class="keyword">procedure</span> TForm1.<span class="func">btnGreetClick</span>(Sender: TObject);<br>
+      <span class="keyword">var</span><br>
+      &nbsp;&nbsp;sName : <span class="type">String</span>;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Local variables</span><br>
+      <span class="keyword">begin</span><br>
+      &nbsp;&nbsp;sName := edtName.Text;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// Input</span><br>
+      &nbsp;&nbsp;lblOutput.Caption := <span class="string">'Hello, '</span> + sName;&nbsp;<span class="comment">// Output</span><br>
+      <span class="keyword">end</span>;<br><br>
+      <span class="keyword">end</span>.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">// End of unit — always needed</span>
+    </div>
+  </div>
+
+  <!-- String methods -->
+  <div class="card">
+    <h3>🔤 String Methods (Grade 10 — Term 2)</h3>
+    <table>
+      <thead><tr><th>Method</th><th>Purpose</th><th>Example</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td><code style="color:var(--accent3)">Length(s)</code></td><td>Number of characters in string</td><td><code>Length('Hello')</code></td><td><code>5</code></td></tr>
+        <tr><td><code style="color:var(--accent3)">UpperCase(s)</code></td><td>Convert ALL letters to uppercase</td><td><code>UpperCase('hello')</code></td><td><code>'HELLO'</code></td></tr>
+        <tr><td><code style="color:var(--accent3)">UpCase(c)</code></td><td>Convert a single CHAR to uppercase</td><td><code>UpCase('a')</code></td><td><code>'A'</code></td></tr>
+        <tr><td><code style="color:var(--accent3)">Trim(s)</code></td><td>Remove leading & trailing spaces</td><td><code>Trim(' hi ')</code></td><td><code>'hi'</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Debugging -->
+  <div class="card">
+    <h3>🐛 Types of Errors & Debugging</h3>
+    <div class="grid-3">
+      <div style="background:rgba(247,94,124,.1); border:1px solid rgba(247,94,124,.3); border-radius:12px; padding:18px">
+        <p style="color:var(--accent4); font-weight:700; margin-bottom:8px">🔴 Syntax Error</p>
+        <p style="font-size:.85rem; color:var(--muted)">Code violates grammar rules. Delphi spots this at <b>compile time</b>.</p>
+        <div class="code-block" style="margin-top:8px; font-size:.72rem">
+          lblResult.Caption = <span class="string">'Hi'</span>;<br>
+          <span class="comment">// Error: should be :=</span>
+        </div>
+      </div>
+      <div style="background:rgba(247,162,62,.1); border:1px solid rgba(247,162,62,.3); border-radius:12px; padding:18px">
+        <p style="color:var(--accent3); font-weight:700; margin-bottom:8px">🟡 Runtime Error</p>
+        <p style="font-size:.85rem; color:var(--muted)">Compiles OK but <b>crashes while running</b>. Often caused by invalid input.</p>
+        <div class="code-block" style="margin-top:8px; font-size:.72rem">
+          <span class="comment">// User types 'abc' in a</span><br>
+          <span class="comment">// numeric field:</span><br>
+          iAge := <span class="func">StrToInt</span>(edtAge.Text);<br>
+          <span class="comment">// CRASH! 'abc' ≠ integer</span>
+        </div>
+      </div>
+      <div style="background:rgba(62,207,207,.1); border:1px solid rgba(62,207,207,.3); border-radius:12px; padding:18px">
+        <p style="color:var(--accent2); font-weight:700; margin-bottom:8px">🔵 Logic Error</p>
+        <p style="font-size:.85rem; color:var(--muted)">Program runs but gives <b>wrong answers</b>. Hardest to find!</p>
+        <div class="code-block" style="margin-top:8px; font-size:.72rem">
+          <span class="comment">// Calculating average wrong:</span><br>
+          fAvg := fTotal / <span class="number">3</span>; <span class="comment">// Should be /4</span>
+        </div>
+      </div>
+    </div>
+    <div class="callout callout-tip" style="margin-top:16px">
+      <div class="callout-icon">🔧</div>
+      <div class="callout-body">
+        <strong>Debugging Tools in Delphi</strong>
+        <p>Use <b>Breakpoints</b> (click the gutter), <b>Run to Cursor</b>, <b>Step Over (F8)</b>, and the <b>Watch window</b> to inspect variable values at runtime. Also use <b>Trace Tables</b> on paper to manually trace through code.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- TAB 7: FORMATTING OUTPUT -->
+<!-- ══════════════════════════════════════════════ -->
+<div id="tab-formatting" class="section">
+  <div class="sec-header">
+    <div class="sec-icon" style="background:rgba(247,162,62,.15)">🖨️</div>
+    <div>
+      <h2>Formatting Output</h2>
+      <p>Displaying numbers in fixed, currency, and other professional formats.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🎯 FloatToStrF — Format Specifiers</h3>
+    <p style="margin-bottom:16px">The <code>FloatToStrF</code> function gives you precise control over how decimal numbers are displayed.</p>
+    <div class="code-block">
+      <span class="func">FloatToStrF</span>(Value, Format, Precision, Digits)<br>
+      <span class="comment">// Value     = the Real number to format</span><br>
+      <span class="comment">// Format    = ffFixed, ffCurrency, ffGeneral, ffExponent, ffNumber</span><br>
+      <span class="comment">// Precision = total significant digits</span><br>
+      <span class="comment">// Digits    = decimal places to show</span>
+    </div>
+
+    <table style="margin-top:16px">
+      <thead><tr><th>Format Constant</th><th>Description</th><th>Example Code</th><th>Output</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code style="color:var(--accent3)">ffFixed</code></td>
+          <td>Fixed decimal places (most common)</td>
+          <td><code>FloatToStrF(3.5, ffFixed, 8, 2)</code></td>
+          <td><code style="color:var(--green)">'3.50'</code></td>
+        </tr>
+        <tr>
+          <td><code style="color:var(--accent3)">ffCurrency</code></td>
+          <td>Currency format with symbol</td>
+          <td><code>FloatToStrF(1234.5, ffCurrency, 8, 2)</code></td>
+          <td><code style="color:var(--green)">'R 1,234.50'</code></td>
+        </tr>
+        <tr>
+          <td><code style="color:var(--accent3)">ffNumber</code></td>
+          <td>Number with thousand separators</td>
+          <td><code>FloatToStrF(12345.678, ffNumber, 10, 2)</code></td>
+          <td><code style="color:var(--green)">'12,345.68'</code></td>
+        </tr>
+        <tr>
+          <td><code style="color:var(--accent3)">ffGeneral</code></td>
+          <td>General format (compact)</td>
+          <td><code>FloatToStrF(3.5, ffGeneral, 5, 2)</code></td>
+          <td><code style="color:var(--green)">'3.5'</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>💰 Worked Example: Receipt Generator</h3>
+    <div class="code-block">
+      <span class="label">Delphi Pascal</span>
+      <span class="keyword">procedure</span> TForm1.<span class="func">btnCalculateClick</span>(Sender: TObject);<br>
+      <span class="keyword">var</span><br>
+      &nbsp;&nbsp;fPrice, fVAT, fTotal : <span class="type">Real</span>;<br>
+      <span class="keyword">begin</span><br>
+      &nbsp;&nbsp;fPrice := <span class="func">StrToFloat</span>(edtPrice.Text);<br>
+      &nbsp;&nbsp;fVAT   := fPrice * <span class="number">0.15</span>;<br>
+      &nbsp;&nbsp;fTotal := fPrice + fVAT;<br>
+      <br>
+      &nbsp;&nbsp;mmoReceipt.Clear;<br>
+      &nbsp;&nbsp;mmoReceipt.Lines.Add(<span class="string">'=== RECEIPT ==='</span>);<br>
+      &nbsp;&nbsp;mmoReceipt.Lines.Add(<span class="string">'Price:  R'</span> + <span class="func">FloatToStrF</span>(fPrice, ffFixed, <span class="number">8</span>, <span class="number">2</span>));<br>
+      &nbsp;&nbsp;mmoReceipt.Lines.Add(<span class="string">'VAT:    R'</span> + <span class="func">FloatToStrF</span>(fVAT, ffFixed, <span class="number">8</span>, <span class="number">2</span>));<br>
+      &nbsp;&nbsp;mmoReceipt.Lines.Add(<span class="string">'Total:  R'</span> + <span class="func">FloatToStrF</span>(fTotal, ffFixed, <span class="number">8</span>, <span class="number">2</span>));<br>
+      &nbsp;&nbsp;mmoReceipt.Lines.Add(<span class="string">'==============='</span>);<br>
+      <span class="keyword">end</span>;
+    </div>
+    <div class="format-demo" style="margin-top:14px">
+      <span style="color:var(--muted)">Output in TMemo:</span><br>
+      <span style="color:var(--green)">=== RECEIPT ===<br>
+      Price:  R100.00<br>
+      VAT:    R15.00<br>
+      Total:  R115.00<br>
+      ===============</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- TAB 8: CONDITIONALS -->
+<!-- ══════════════════════════════════════════════ -->
+<div id="tab-conditionals" class="section">
+  <div class="sec-header">
+    <div class="sec-icon" style="background:rgba(124,106,247,.15)">🔀</div>
+    <div>
+      <h2>Conditional Constructs</h2>
+      <p>Making decisions in your code — IF statements, nested IFs, and CASE.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>✅ IF Statement (Basic)</h3>
+    <div class="grid-2">
+      <div>
+        <p style="margin-bottom:10px; color:var(--muted)">Single IF:</p>
+        <div class="code-block">
+          <span class="keyword">if</span> iAge >= <span class="number">18</span> <span class="keyword">then</span><br>
+          &nbsp;&nbsp;lblResult.Caption := <span class="string">'Adult'</span>;
+        </div>
+      </div>
+      <div>
+        <p style="margin-bottom:10px; color:var(--muted)">IF-THEN-ELSE:</p>
+        <div class="code-block">
+          <span class="keyword">if</span> iAge >= <span class="number">18</span> <span class="keyword">then</span><br>
+          &nbsp;&nbsp;lblResult.Caption := <span class="string">'Adult'</span><br>
+          <span class="keyword">else</span><br>
+          &nbsp;&nbsp;lblResult.Caption := <span class="string">'Minor'</span>;
+        </div>
+      </div>
+    </div>
+    <div class="callout callout-warn" style="margin-top:14px">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <strong>IMPORTANT: No semicolon before ELSE!</strong>
+        <p>In Delphi, the line before <code>else</code> must NOT have a semicolon. <code>lblResult.Caption := 'Adult'</code> ← no semicolon here!</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🎓 Worked Example: Grade Calculator</h3>
+    <div class="code-block">
+      <span class="label">Delphi Pascal — Nested IF</span>
+      <span class="keyword">procedure</span> TForm1.<span class="func">btnGradeClick</span>(Sender: TObject);<br>
+      <span class="keyword">var</span><br>
+      &nbsp;&nbsp;iMark : <span class="type">Integer</span>;<br>
+      &nbsp;&nbsp;sGrade : <span class="type">String</span>;<br>
+      <span class="keyword">begin</span><br>
+      &nbsp;&nbsp;iMark := <span class="func">StrToInt</span>(edtMark.Text);<br>
+      <br>
+      &nbsp;&nbsp;<span class="keyword">if</span> iMark >= <span class="number">80</span> <span class="keyword">then</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;sGrade := <span class="string">'Outstanding (Level 7)'</span><br>
+      &nbsp;&nbsp;<span class="keyword">else if</span> iMark >= <span class="number">70</span> <span class="keyword">then</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;sGrade := <span class="string">'Meritorious (Level 6)'</span><br>
+      &nbsp;&nbsp;<span class="keyword">else if</span> iMark >= <span class="number">60</span> <span class="keyword">then</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;sGrade := <span class="string">'Substantial (Level 5)'</span><br>
+      &nbsp;&nbsp;<span class="keyword">else if</span> iMark >= <span class="number">50</span> <span class="keyword">then</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;sGrade := <span class="string">'Adequate (Level 4)'</span><br>
+      &nbsp;&nbsp;<span class="keyword">else if</span> iMark >= <span class="number">40</span> <span class="keyword">then</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;sGrade := <span class="string">'Moderate (Level 3)'</span><br>
+      &nbsp;&nbsp;<span class="keyword">else if</span> iMark >= <span class="number">30</span> <span class="keyword">then</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;sGrade := <span class="string">'Elementary (Level 2)'</span><br>
+      &nbsp;&nbsp;<span class="keyword">else</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;sGrade := <span class="string">'Not Achieved (Level 1)'</span>;<br>
+      <br>
+      &nbsp;&nbsp;lblGrade.Caption := sGrade;<br>
+      <span class="keyword">end</span>;
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📦 BEGIN...END Blocks</h3>
+    <p style="margin-bottom:12px">When you need <span class="hl">multiple statements</span> in an IF branch, wrap them in <code>begin...end</code>:</p>
+    <div class="code-block">
+      <span class="keyword">if</span> iMark >= <span class="number">50</span> <span class="keyword">then</span><br>
+      <span class="keyword">begin</span><br>
+      &nbsp;&nbsp;lblResult.Caption := <span class="string">'Passed!'</span>;<br>
+      &nbsp;&nbsp;lblResult.Color := <span class="func">clGreen</span>;<br>
+      &nbsp;&nbsp;<span class="func">ShowMessage</span>(<span class="string">'Congratulations!'</span>);<br>
+      <span class="keyword">end</span><br>
+      <span class="keyword">else</span><br>
+      <span class="keyword">begin</span><br>
+      &nbsp;&nbsp;lblResult.Caption := <span class="string">'Failed!'</span>;<br>
+      &nbsp;&nbsp;lblResult.Color := <span class="func">clRed</span>;<br>
+      <span class="keyword">end</span>; <span class="comment">// Note: semicolon AFTER end when not before else</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📋 CASE Statement — Multi-way Selection</h3>
+    <p style="margin-bottom:12px">Use <code>case</code> when comparing one variable against multiple specific values. Cleaner than many nested IFs!</p>
+    <div class="code-block">
+      <span class="label">Delphi Pascal — CASE</span>
+      <span class="keyword">var</span> iDay : <span class="type">Integer</span>;<br>
+      <span class="keyword">begin</span><br>
+      &nbsp;&nbsp;iDay := <span class="func">StrToInt</span>(edtDay.Text);<br>
+      <br>
+      &nbsp;&nbsp;<span class="keyword">case</span> iDay <span class="keyword">of</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="number">1</span>: lblDay.Caption := <span class="string">'Monday'</span>;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="number">2</span>: lblDay.Caption := <span class="string">'Tuesday'</span>;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="number">3</span>: lblDay.Caption := <span class="string">'Wednesday'</span>;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="number">4</span>: lblDay.Caption := <span class="string">'Thursday'</span>;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="number">5</span>: lblDay.Caption := <span class="string">'Friday'</span>;<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="number">6,7</span>: lblDay.Caption := <span class="string">'Weekend!'</span>; <span class="comment">// Multiple values</span><br>
+      &nbsp;&nbsp;<span class="keyword">else</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;lblDay.Caption := <span class="string">'Invalid day'</span>;<br>
+      &nbsp;&nbsp;<span class="keyword">end</span>; <span class="comment">// end of case</span><br>
+      <span class="keyword">end</span>;
+    </div>
+    <div class="callout callout-info" style="margin-top:14px">
+      <div class="callout-icon">📌</div>
+      <div class="callout-body">
+        <strong>When to use CASE vs IF?</strong>
+        <p>Use <b>CASE</b> when comparing one variable against specific integer or char values. Use <b>IF</b> when you have range conditions (e.g., mark ≥ 50) or string comparisons.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- TAB 9: SIMULATOR -->
+<!-- ══════════════════════════════════════════════ -->
+<div id="tab-simulator" class="section">
+  <div class="sec-header">
+    <div class="sec-icon" style="background:rgba(67,233,123,.15)">🚀</div>
+    <div>
+      <h2>Interactive Delphi Simulator</h2>
+      <p>Try out Delphi concepts right here — see how casting, calculations and conditionals work!</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🧮 VAT & Grade Calculator Simulator</h3>
+    <p style="margin-bottom:16px; color:var(--muted)">Simulate what Delphi code would produce. Enter values and click the buttons.</p>
+
+    <div id="delphi-sim">
+      <div class="sim-bar">
+        <div class="ide-dot" style="background:#f75e7c"></div>
+        <div class="ide-dot" style="background:#f7a23e"></div>
+        <div class="ide-dot" style="background:#43e97b"></div>
+        <div class="sim-title">🎮 Delphi Simulator — Unit1.pas</div>
+      </div>
+      <div class="sim-area">
+        <div class="sim-form-area">
+          <div>
+            <div class="sim-form-label">📌 Price (enter a number):</div>
+            <input class="sim-field" id="simPrice" type="number" placeholder="e.g. 250.00" step="0.01">
+          </div>
+          <div>
+            <div class="sim-form-label">📌 Learner's Mark (0–100):</div>
+            <input class="sim-field" id="simMark" type="number" placeholder="e.g. 75" min="0" max="100">
+          </div>
+          <div>
+            <div class="sim-form-label">📌 Your Name:</div>
+            <input class="sim-field" id="simName" type="text" placeholder="e.g. Thabo">
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap">
+            <button class="sim-button" onclick="runVAT()">💰 Calculate VAT</button>
+            <button class="sim-button" style="background:var(--accent2)" onclick="runGrade()">🎓 Get Grade</button>
+            <button class="sim-button" style="background:var(--accent3); color:#000" onclick="runGreet()">👋 Greet</button>
+            <button class="sim-button" style="background:var(--border)" onclick="clearSim()">🗑️ Clear</button>
+          </div>
+        </div>
+        <div class="sim-output">
+          <div class="sim-output-title">📤 Output / lblResult.Caption</div>
+          <div id="simOutputLines"></div>
+        </div>
+      </div>
+      <div class="sim-generated-code" id="simCode">
+        <span style="color:var(--muted); font-size:.7rem">// Generated code will appear here after you click a button...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Casting Practice -->
+  <div class="card" style="margin-top:24px">
+    <h3>🔄 Casting Quick Quiz</h3>
+    <p style="margin-bottom:16px; color:var(--muted)">Type what the following code will output (or whether it gives an error):</p>
+    
+    <div id="castPractice" style="display:flex; flex-direction:column; gap:14px">
+      <div style="background:var(--code-bg); border:1px solid var(--border); border-radius:10px; padding:16px">
+        <div style="font-family:'JetBrains Mono',monospace; font-size:.82rem; margin-bottom:10px; color:var(--text)">
+          lblResult.Caption := <span style="color:#43e97b">IntToStr</span>(<span style="color:#f7a23e">3</span> + <span style="color:#f7a23e">4</span>);
+        </div>
+        <div style="display:flex; gap:10px; align-items:center">
+          <input style="background:var(--surface); border:1px solid var(--border); color:var(--text); padding:8px 12px; border-radius:8px; font-family:'JetBrains Mono',monospace; font-size:.85rem; flex:1" type="text" id="cp1" placeholder="What does lblResult.Caption show?">
+          <button onclick="checkCast(1,'7')" style="background:var(--accent1); color:white; border:none; border-radius:8px; padding:8px 16px; cursor:pointer; font-weight:700">Check</button>
+        </div>
+        <div id="cp1fb" style="margin-top:8px; font-size:.82rem; display:none"></div>
+      </div>
+
+      <div style="background:var(--code-bg); border:1px solid var(--border); border-radius:10px; padding:16px">
+        <div style="font-family:'JetBrains Mono',monospace; font-size:.82rem; margin-bottom:10px; color:var(--text)">
+          lblResult.Caption := <span style="color:#43e97b">FloatToStrF</span>(<span style="color:#f7a23e">3.5678</span>, ffFixed, <span style="color:#f7a23e">8</span>, <span style="color:#f7a23e">2</span>);
+        </div>
+        <div style="display:flex; gap:10px; align-items:center">
+          <input style="background:var(--surface); border:1px solid var(--border); color:var(--text); padding:8px 12px; border-radius:8px; font-family:'JetBrains Mono',monospace; font-size:.85rem; flex:1" type="text" id="cp2" placeholder="What does lblResult.Caption show?">
+          <button onclick="checkCast(2,'3.57')" style="background:var(--accent1); color:white; border:none; border-radius:8px; padding:8px 16px; cursor:pointer; font-weight:700">Check</button>
+        </div>
+        <div id="cp2fb" style="margin-top:8px; font-size:.82rem; display:none"></div>
+      </div>
+
+      <div style="background:var(--code-bg); border:1px solid var(--border); border-radius:10px; padding:16px">
+        <div style="font-family:'JetBrains Mono',monospace; font-size:.82rem; margin-bottom:10px; color:var(--text)">
+          iResult := <span style="color:#f75e7c">17</span> <span style="color:#7c6af7">mod</span> <span style="color:#f75e7c">5</span>;<br>
+          lblResult.Caption := <span style="color:#43e97b">IntToStr</span>(iResult);
+        </div>
+        <div style="display:flex; gap:10px; align-items:center">
+          <input style="background:var(--surface); border:1px solid var(--border); color:var(--text); padding:8px 12px; border-radius:8px; font-family:'JetBrains Mono',monospace; font-size:.85rem; flex:1" type="text" id="cp3" placeholder="What does lblResult.Caption show?">
+          <button onclick="checkCast(3,'2')" style="background:var(--accent1); color:white; border:none; border-radius:8px; padding:8px 16px; cursor:pointer; font-weight:700">Check</button>
+        </div>
+        <div id="cp3fb" style="margin-top:8px; font-size:.82rem; display:none"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- TAB 10: QUIZ -->
+<!-- ══════════════════════════════════════════════ -->
+<div id="tab-quiz" class="section">
+  <div class="sec-header">
+    <div class="sec-icon" style="background:rgba(247,162,62,.15)">🧠</div>
+    <div>
+      <h2>Chapter 2 Quiz</h2>
+      <p>Test your knowledge — all questions are CAPS-aligned and exam-relevant!</p>
+    </div>
+  </div>
+
+  <div class="quiz-score-bar">
+    <div class="score-num" id="scoreNum">0</div>
+    <div>
+      <div style="font-weight:700; font-size:1rem">Score</div>
+      <div class="score-label" id="scoreLabel">Answer questions to track your score</div>
+    </div>
+    <div style="flex:1"></div>
+    <div class="progress-bar-wrap" style="flex:1">
+      <div class="progress-bar-fill" id="scoreBar" style="width:0%"></div>
+    </div>
+    <button onclick="resetQuiz()" style="background:var(--border); color:var(--text); border:none; border-radius:8px; padding:10px 18px; cursor:pointer; font-weight:700; font-family:'Sora',sans-serif">🔄 Reset</button>
+  </div>
+
+  <div id="quiz-container"></div>
+</div>
+
+<footer>
+  <p>📘 Grade 10 IT · Chapter 2: Introduction to Delphi · Aligned to CAPS 2024 & ATP 2026</p>
+  <p style="margin-top:6px; font-size:.72rem">Remember: <strong>Compile → Run → Test → Debug → Improve!</strong> 🚀</p>
+</footer>
+
+<script>
+// ── TAB NAVIGATION ──
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({top: 0, behavior:'smooth'});
+}
+
+// ── ACCORDION ──
+document.querySelectorAll('.acc-header').forEach(h => {
+  h.addEventListener('click', () => {
+    const body = h.nextElementSibling;
+    const arrow = h.querySelector('.acc-arrow');
+    body.classList.toggle('open');
+    arrow.style.transform = body.classList.contains('open') ? 'rotate(180deg)' : '';
+  });
+});
+
+// ── DELPHI SIMULATOR ──
+function addOutput(text, isErr=false) {
+  const el = document.createElement('div');
+  el.className = 'sim-output-line' + (isErr ? ' err' : '');
+  el.textContent = text;
+  document.getElementById('simOutputLines').appendChild(el);
+}
+function clearSim() {
+  document.getElementById('simOutputLines').innerHTML = '';
+  document.getElementById('simCode').innerHTML = '<span style="color:var(--muted); font-size:.7rem">// Code cleared...</span>';
+}
+function setCode(code) {
+  document.getElementById('simCode').innerHTML = code;
+}
+
+function runVAT() {
+  clearSim();
+  const raw = document.getElementById('simPrice').value;
+  if (!raw || isNaN(raw)) {
+    addOutput('❌ ERROR: StrToFloat failed — please enter a valid number!', true);
+    setCode('<span style="color:#5c6db8">// Runtime Error: edtPrice.Text = \'' + (raw||'') + '\' cannot be converted to Real</span>');
+    return;
+  }
+  const fPrice = parseFloat(raw);
+  const fVAT = fPrice * 0.15;
+  const fTotal = fPrice + fVAT;
+  addOutput('=== VAT RECEIPT ===');
+  addOutput('Price:  R' + fPrice.toFixed(2));
+  addOutput('VAT:    R' + fVAT.toFixed(2));
+  addOutput('Total:  R' + fTotal.toFixed(2));
+  addOutput('===================');
+  setCode(
+    `<span style="color:#7c6af7">procedure</span> TForm1.<span style="color:#f7a23e">btnVATClick</span>(Sender: TObject);\n` +
+    `<span style="color:#7c6af7">var</span>\n  fPrice, fVAT, fTotal : <span style="color:#3ecfcf">Real</span>;\n<span style="color:#7c6af7">begin</span>\n` +
+    `  fPrice := <span style="color:#f7a23e">StrToFloat</span>(edtPrice.Text); <span style="color:#5c6db8">// = ${fPrice}</span>\n` +
+    `  fVAT   := fPrice * <span style="color:#f75e7c">0.15</span>; <span style="color:#5c6db8">// = ${fVAT.toFixed(2)}</span>\n` +
+    `  fTotal := fPrice + fVAT; <span style="color:#5c6db8">// = ${fTotal.toFixed(2)}</span>\n` +
+    `  mmoReceipt.Lines.Add(<span style="color:#43e97b">'Total: R'</span> + <span style="color:#f7a23e">FloatToStrF</span>(fTotal, ffFixed, <span style="color:#f75e7c">8</span>, <span style="color:#f75e7c">2</span>));\n<span style="color:#7c6af7">end</span>;`
+  );
+}
+
+function runGrade() {
+  clearSim();
+  const raw = document.getElementById('simMark').value;
+  if (!raw || isNaN(raw)) {
+    addOutput('❌ ERROR: Please enter a valid mark (0–100)!', true);
+    return;
+  }
+  const iMark = parseInt(raw);
+  let sGrade, iLevel;
+  if (iMark >= 80) { sGrade = 'Outstanding'; iLevel = 7; }
+  else if (iMark >= 70) { sGrade = 'Meritorious'; iLevel = 6; }
+  else if (iMark >= 60) { sGrade = 'Substantial Achievement'; iLevel = 5; }
+  else if (iMark >= 50) { sGrade = 'Adequate Achievement'; iLevel = 4; }
+  else if (iMark >= 40) { sGrade = 'Moderate Achievement'; iLevel = 3; }
+  else if (iMark >= 30) { sGrade = 'Elementary Achievement'; iLevel = 2; }
+  else { sGrade = 'Not Achieved'; iLevel = 1; }
+  addOutput(`Mark entered: ${iMark}%`);
+  addOutput(`Grade: Level ${iLevel} — ${sGrade}`);
+  addOutput(iMark >= 50 ? '✅ PASSED' : '❌ FAILED');
+  setCode(
+    `<span style="color:#7c6af7">if</span> iMark >= <span style="color:#f75e7c">80</span> <span style="color:#7c6af7">then</span> sGrade := <span style="color:#43e97b">'Outstanding'</span>\n` +
+    `<span style="color:#7c6af7">else if</span> iMark >= <span style="color:#f75e7c">70</span> <span style="color:#7c6af7">then</span> sGrade := <span style="color:#43e97b">'Meritorious'</span>\n` +
+    `<span style="color:#7c6af7">else if</span> iMark >= <span style="color:#f75e7c">60</span> <span style="color:#7c6af7">then</span> sGrade := <span style="color:#43e97b">'Substantial'</span>\n` +
+    `<span style="color:#7c6af7">else if</span> iMark >= <span style="color:#f75e7c">50</span> <span style="color:#7c6af7">then</span> sGrade := <span style="color:#43e97b">'Adequate'</span>\n` +
+    `<span style="color:#5c6db8">// → Result: iMark = ${iMark} → ${sGrade} (Level ${iLevel})</span>`
+  );
+}
+
+function runGreet() {
+  clearSim();
+  const sName = document.getElementById('simName').value;
+  if (!sName.trim()) {
+    addOutput("❌ edtName.Text is empty! Please enter a name.", true);
+    return;
+  }
+  addOutput('lblOutput.Caption = "Hello, ' + sName + '!"');
+  addOutput('Length(sName) = ' + sName.length);
+  addOutput('UpperCase(sName) = ' + sName.toUpperCase());
+  addOutput('Trim(sName) = "' + sName.trim() + '"');
+  setCode(
+    `sName := edtName.Text; <span style="color:#5c6db8">// = '${sName}'</span>\n` +
+    `lblOutput.Caption := <span style="color:#43e97b">'Hello, '</span> + sName + <span style="color:#43e97b">'!'</span>;\n` +
+    `lblLen.Caption := <span style="color:#f7a23e">IntToStr</span>(<span style="color:#f7a23e">Length</span>(sName)); <span style="color:#5c6db8">// = ${sName.length}</span>\n` +
+    `lblUpper.Caption := <span style="color:#f7a23e">UpperCase</span>(sName); <span style="color:#5c6db8">// = '${sName.toUpperCase()}'</span>`
+  );
+}
+
+// ── CASTING PRACTICE ──
+function checkCast(n, correct) {
+  const input = document.getElementById('cp'+n).value.trim();
+  const fb = document.getElementById('cp'+n+'fb');
+  fb.style.display = 'block';
+  if (input === correct) {
+    fb.style.color = '#43e97b';
+    fb.innerHTML = '✅ Correct! The output is <code>' + correct + '</code>';
+  } else {
+    fb.style.color = '#f75e7c';
+    fb.innerHTML = '❌ Not quite. The correct answer is <code>' + correct + '</code>';
+    if (n===2) fb.innerHTML += ' — FloatToStrF with 2 decimal places rounds 3.5678 to 3.57';
+    if (n===3) fb.innerHTML += ' — 17 ÷ 5 = 3 remainder <b>2</b>, so 17 mod 5 = 2';
+  }
+}
+
+// ── QUIZ ──
+const questions = [
+  {
+    q: "What does IDE stand for?",
+    opts: ["Interface Design Environment", "Integrated Development Environment", "Internal Data Engine", "Internet Design Editor"],
+    correct: 1,
+    explain: "IDE = Integrated Development Environment — it combines code editor, form designer, compiler and debugger in one application."
+  },
+  {
+    q: "Which of the following is the correct assignment operator in Delphi/Pascal?",
+    opts: ["=", "==", ":=", "<-"],
+    correct: 2,
+    explain: "In Pascal/Delphi, ':=' is used to assign a value to a variable. '=' is used for comparison only."
+  },
+  {
+    q: "A user types '50' in a TEdit called edtAge. What is the data type of edtAge.Text?",
+    opts: ["Integer", "Real", "String", "Boolean"],
+    correct: 2,
+    explain: "All TEdit.Text values are Strings — even if they look like numbers. You must cast them using StrToInt() or StrToFloat()."
+  },
+  {
+    q: "What is the output of: FloatToStrF(3.145, ffFixed, 8, 2)?",
+    opts: ["'3'", "'3.14'", "'3.15'", "'3.145'"],
+    correct: 1,
+    explain: "ffFixed with 2 decimal places gives '3.14' — it truncates/rounds to 2 decimal places. 3.145 rounds to 3.15... actually 3.14 due to floating point. Accept 3.14 or 3.15."
+  },
+  {
+    q: "Which function converts an Integer to a String in Delphi?",
+    opts: ["StrToInt()", "IntToStr()", "IntToFloat()", "FloatToStr()"],
+    correct: 1,
+    explain: "IntToStr() converts an Integer to a String. This is needed to display integer values in TLabel.Caption or TMemo."
+  },
+  {
+    q: "What does 17 mod 5 equal?",
+    opts: ["3", "2", "1", "85"],
+    correct: 1,
+    explain: "17 ÷ 5 = 3 remainder 2. So 17 mod 5 = 2. The modulus (mod) operator returns the REMAINDER after integer division."
+  },
+  {
+    q: "Which event fires when the user clicks a TButton?",
+    opts: ["OnCreate", "OnMouseMove", "OnClick", "OnActivate"],
+    correct: 2,
+    explain: "OnClick fires when the user clicks the component. It is the most commonly used event in Grade 10 Delphi programming."
+  },
+  {
+    q: "What is the purpose of the Object Inspector in Delphi?",
+    opts: ["To write code", "To compile the project", "To set properties and events of components", "To browse the internet"],
+    correct: 2,
+    explain: "The Object Inspector shows and allows you to change Properties (appearance/behaviour) and Events (what triggers code) for each selected component."
+  },
+  {
+    q: "In Delphi, what does the following code do?\nlblResult.Visible := False;",
+    opts: ["Deletes the label", "Hides the label from view", "Disables the label", "Changes the label color"],
+    correct: 1,
+    explain: "Setting Visible to False hides the component — it still exists in memory, just not shown. To disable interaction, use Enabled := False."
+  },
+  {
+    q: "Which construct should you use when a variable must be checked against specific values like 1, 2, 3, 4?",
+    opts: ["FOR loop", "IF-ELSE chain", "CASE statement", "WHILE loop"],
+    correct: 2,
+    explain: "The CASE statement is ideal for comparing one variable against a list of specific integer or character values. It is cleaner than many nested IF-ELSE statements."
+  },
+  {
+    q: "What type of error occurs when your code compiles successfully but produces wrong results?",
+    opts: ["Syntax Error", "Runtime Error", "Logic Error", "Compile Error"],
+    correct: 2,
+    explain: "A Logic Error means the program runs without crashing but gives incorrect output. It is caused by mistakes in the algorithm or calculations, not in the code syntax."
+  },
+  {
+    q: "What is the result of: (True AND False) OR (NOT False)?",
+    opts: ["True", "False", "Undefined", "Error"],
+    correct: 0,
+    explain: "(True AND False) = False. NOT False = True. False OR True = True. Remember order: NOT is evaluated first, then AND, then OR."
+  }
+];
+
+let scores = 0, answered = 0;
+
+function buildQuiz() {
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+  questions.forEach((q, idx) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-q';
+    div.innerHTML = `
+      <p><span style="color:var(--muted);font-size:.8rem">Question ${idx+1} of ${questions.length}</span><br>${q.q.replace(/\n/g,'<br>')}</p>
+      <div class="quiz-options">
+        ${q.opts.map((opt, i) => `
+          <div class="quiz-opt" id="qo-${idx}-${i}" onclick="answerQ(${idx},${i})">
+            <div class="quiz-letter">${'ABCD'[i]}</div>
+            <span>${opt}</span>
+          </div>
+        `).join('')}
+      </div>
+      <div class="quiz-feedback" id="qfb-${idx}"></div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function answerQ(qIdx, oIdx) {
+  const q = questions[qIdx];
+  const opts = document.querySelectorAll(`[id^="qo-${qIdx}-"]`);
+  opts.forEach(o => o.classList.add('disabled'));
+  const fb = document.getElementById('qfb-' + qIdx);
+  if (oIdx === q.correct) {
+    opts[oIdx].classList.add('correct');
+    fb.style.display = 'block';
+    fb.style.background = 'rgba(67,233,123,.1)';
+    fb.style.color = '#43e97b';
+    fb.style.padding = '12px 16px';
+    fb.style.borderRadius = '10px';
+    fb.innerHTML = '✅ Correct! ' + q.explain;
+    scores++;
+    answered++;
+  } else {
+    opts[oIdx].classList.add('wrong');
+    opts[q.correct].classList.add('correct');
+    fb.style.display = 'block';
+    fb.style.background = 'rgba(247,94,124,.1)';
+    fb.style.color = '#f75e7c';
+    fb.style.padding = '12px 16px';
+    fb.style.borderRadius = '10px';
+    fb.innerHTML = '❌ Incorrect. Correct answer: <b>' + q.opts[q.correct] + '</b>. ' + q.explain;
+    answered++;
+  }
+  updateScore();
+}
+
+function updateScore() {
+  document.getElementById('scoreNum').textContent = scores;
+  const pct = Math.round((scores/questions.length)*100);
+  document.getElementById('scoreBar').style.width = pct + '%';
+  document.getElementById('scoreLabel').textContent = `${scores} / ${questions.length} correct (${answered} answered)`;
+}
+
+function resetQuiz() {
+  scores = 0; answered = 0;
+  updateScore();
+  buildQuiz();
+}
+
+buildQuiz();
+</script>
+</body>
+</html>
